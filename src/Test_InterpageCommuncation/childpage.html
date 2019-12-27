@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body onload="go()">
+    <h2>Child Page</h2>
+    <br/>
+    <br/>
+    <input type="text" id="textField" value="" />
+
+    <script type="text/javascript">
+        function go() {
+            window.addEventListener('message', receiveMessage, false);
+        }
+
+        
+        function receiveMessage(event) {
+            if (event) {
+                if (event.origin != "https://localhost:44323") return;
+                var dta = JSON.parse(event.data);
+
+                switch (dta.action) {
+
+                    case 'close': {
+                        event.source.postMessage("closed", "https://localhost:44323");
+                        window.close();
+                        break;
+                    }
+
+                    case 'text': {
+                         var field = document.getElementById("textField");
+                    if (field != null) field.value = dta.value;
+                    }
+                }
+              
+            }
+        }
+    
+    </script>
+</body>
+</html>

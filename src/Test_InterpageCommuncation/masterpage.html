@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body onload="go()">
+    <input type="button" onclick="openwindow()" value="Open Child Window" />
+    <br />
+    <input type="button" onclick="closewithmessage()" value="Close Child Window"/>
+    <br />
+    <input type="button" onclick="displaymessage()" value="Display Message" />
+    <br />
+
+    <script type="text/javascript">
+        var myWindow = null;
+
+        function go() {
+            window.addEventListener('message', receiveMessage, false);
+        }
+
+        function makemessage(action, value) {
+            var obj = new Object();
+            obj.action = action;
+            obj.value = value;
+            return JSON.stringify(obj);
+        }
+
+
+        function receiveMessage(event) {
+            if (event.origin = "https://localhost:44323") {
+                if (event.data == "closed") {
+                    myWindow = null;
+                }
+            }
+        }
+
+        function openwindow() {
+            if (myWindow == null) {
+                myWindow = window.open("childpage.html", "_blank");
+            }
+        }
+
+       
+
+        function closewithmessage() {
+            if (myWindow != null) {
+                myWindow.postMessage(makemessage('close',''), 'https://localhost:44323');               
+            }
+        }
+
+        function displaymessage() {
+            if (myWindow != null) {
+                myWindow.postMessage(makemessage('text','This is the message to display'), 'https://localhost:44323');               
+            }
+        }
+    </script>
+
+</body>
+</html>
